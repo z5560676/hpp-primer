@@ -1,12 +1,13 @@
 services:
   db:
-    image: postgres:15
+    image: postgres:latest
     environment:
       POSTGRES_USER: marksuser
       POSTGRES_PASSWORD: markspass
       POSTGRES_DB: marksdb
-    # Pre-seed script is required as a volume to load mock database
-    # Data inside the container is lost on restart unless you persist it with a volume.
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql  # 将初始化脚本挂载到 PostgreSQL 初始化目录
+      - db_data:/var/lib/postgresql/data  # 持久化数据库数据
     ports:
       - "5432:5432"
 
@@ -36,3 +37,5 @@ services:
       - db
     profiles:
       - debug
+volumes:
+  db_data:
