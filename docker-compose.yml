@@ -11,10 +11,23 @@ services:
       - "5432:5432"
 
   backend:
-    # TODO: you will need to add to this
+    build: ./backend  # 假设后端代码在 ./backend 目录下
+    environment:
+      DB_HOST: db
+      DB_USER: marksuser
+      DB_PASSWORD: markspass
+      DB_NAME: marksdb
+    ports:
+      - "5000:5000"  # 后端运行在5000端口
+    depends_on:
+      - db  # 确保数据库先启动
 
   frontend:
-    # TODO: you will need to add to this
+    build: ./frontend  # 假设前端代码在 ./frontend 目录下
+    ports:
+      - "8080:8080"  # 前端运行在8080端口
+    depends_on:
+      - backend  # 确保后端服务先启动
 
   automark:
     build: ./automark
