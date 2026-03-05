@@ -37,5 +37,6 @@ services:
       - db
     profiles:
       - debug
+      
 volumes:
   db_data:
