@@ -1,7 +1,8 @@
 version: "3.8"
+
 services:
   db:
-    image: postgres:latest
+    image: postgres:15  # 你可以选择使用 postgres:15 或 postgres:latest
     environment:
       POSTGRES_USER: marksuser
       POSTGRES_PASSWORD: markspass
@@ -19,33 +20,32 @@ services:
       timeout: 10s
 
   backend:
-    build: ./backend  # 后端代码路径
+    build: ./backend
     environment:
       DB_HOST: db
       DB_USER: marksuser
       DB_PASSWORD: markspass
       DB_NAME: marksdb
     ports:
-      - "5001:5001"  # 将容器的 5001 端口映射到主机的 5001 端口
+      - "5001:5001"  # 后端端口
     depends_on:
       - db
     command: gunicorn --bind 0.0.0.0:5001 app:app  # 启动后端服务
 
   frontend:
-    build: ./frontend  # 前端代码路径
+    build: ./frontend
     ports:
-      - "8080:8080"  # 前端运行在 8080 端口
+      - "8080:8080"  # 前端端口
     depends_on:
       - backend  # 确保后端服务先启动
-  automark:  # 添加 automark 服务
-    image: liosu/automark
-    container_name: automark
-    ports:
-      - "9900:9900"
-    depends_on:
-      - db
-    # 更多配置项
 
+  automark:  # automark 服务
+    build: ./automark
+    depends_on:
+      - backend
+      - db
+    profiles:
+      - debug
 
 volumes:
   db-data:

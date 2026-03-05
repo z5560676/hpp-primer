@@ -17,6 +17,7 @@ def get_students():
     Route to fetch all students from the database
     return: Array of student objects
     """
+<<<<<<< HEAD
     try:
         students = db.get_all_students()  # 获取所有学生信息
         return jsonify(students), 200  # 返回学生数据，状态码 200
@@ -54,10 +55,46 @@ def update_student(student_id):
         return jsonify(updated_student), 200  # 返回更新后的学生信息
     except Exception as e:
         return {"error": str(e)}, 500  # 如果出现异常，返回 500 错误
+=======
+    # TODO: replace with your implementation. This is a mock response
+    return jsonify([
+        {'course': 'COMP1531', 'id': 1, 'mark': 85, 'name': 'Alice Zhang'},
+        {'course': 'COMP1531', 'id': 2, 'mark': 72, 'name': 'Bob Smith'}
+    ]), 200
+
+
+@app.route("/students", methods=["POST"])
+def create_student():
+    """
+    Route to create a new student
+    param name: The name of the student (from request body)
+    param course: The course the student is enrolled in (from request body)
+    param mark: The mark the student received (from request body)
+    return: The created student if successful
+    """
+
+    # Getting the request body - replace with your implementation
+    student_data = request.json
+
+    pass
+
+
+@app.route("/students/<int:student_id>", methods=["PUT"])
+def update_student(student_id):
+    """
+    Route to update student details by id
+    param name: The name of the student (from request body)
+    param course: The course the student is enrolled in (from request body)
+    param mark: The mark the student received (from request body)
+    return: The updated student if successful
+    """
+    pass  # replace with your implementation
+>>>>>>> origin/eric/stats-feature
 
 
 @app.route("/students/<int:student_id>", methods=["DELETE"])
 def delete_student(student_id):
+<<<<<<< HEAD
     try:
         student = db.get_student_by_id(student_id)  # 查找学生
         if not student:
@@ -67,15 +104,30 @@ def delete_student(student_id):
         return '', 204  # 删除成功，返回空响应和 204 状态码
     except Exception as e:
         return {"error": str(e)}, 500  # 如果出现异常，返回 500 错误
+=======
+    """
+    Route to delete student by id
+    return: The deleted student
+    """
+    pass  # replace with your implementation
+>>>>>>> origin/eric/stats-feature
 
 
 @app.route("/stats")
 def get_stats():
+<<<<<<< HEAD
     try:
         stats = db.get_stats()  # 获取统计信息
         return jsonify(stats), 200  # 返回统计信息，状态码 200
     except Exception as e:
         return {"error": str(e)}, 500  # 如果出现异常，返回 500 错误
+=======
+    """
+    Route to show the stats of all student marks 
+    return: An object with the stats (count, average, min, max)
+    """
+    pass  # replace with your implementation
+>>>>>>> origin/eric/stats-feature
 
 
 @app.route("/")
@@ -85,4 +137,8 @@ def health():
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     app.run(host="0.0.0.0", port=5001)
+=======
+    app.run(host="0.0.0.0", port=5000)
+>>>>>>> origin/eric/stats-feature

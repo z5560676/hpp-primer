@@ -1,2 +1,6 @@
 no-commit/
+<<<<<<< HEAD
 node_modules/.env
+=======
+node_modules/
+>>>>>>> origin/eric/stats-feature

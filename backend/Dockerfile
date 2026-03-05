@@ -1,4 +1,5 @@
 FROM python:3.11-slim
+<<<<<<< HEAD
 
 WORKDIR /app
 
@@ -17,3 +18,11 @@ EXPOSE 5001
 
 # 使用 Gunicorn 启动 Flask 应用，并绑定到 5001 端口
 CMD ["gunicorn", "--bind", "0.0.0.0:5001", "app:app"]
+=======
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app.py db.py ./
+EXPOSE 5000
+CMD ["python", "app.py"]
+>>>>>>> origin/eric/stats-feature
