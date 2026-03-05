@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=22984963&assignment_repo_type=AssignmentRepo)
 # Student Grading System – Primer
 
@@ -242,3 +243,6 @@ In your week 3 lab, you must do the following:
 
 #### Git
 4. Show your pull request on github from your private repo to your tutor
+=======
+# hpp-primer
+>>>>>>> 814a5ce1a1b1010e5504aa4b8345208cfb3a68d4

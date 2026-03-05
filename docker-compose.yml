@@ -1,25 +1,51 @@
+version: "3.8"
 services:
   db:
-    image: postgres:15
+    image: postgres:latest
     environment:
       POSTGRES_USER: marksuser
       POSTGRES_PASSWORD: markspass
       POSTGRES_DB: marksdb
-    # Pre-seed script is required as a volume to load mock database
-    # Data inside the container is lost on restart unless you persist it with a volume.
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db-data:/var/lib/postgresql  # 挂载到 /var/lib/postgresql 而不是 /data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "marksuser", "-d", "marksdb"]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
 
   backend:
-    # TODO: you will need to add to this
+    build: ./backend  # 后端代码路径
+    environment:
+      DB_HOST: db
+      DB_USER: marksuser
+      DB_PASSWORD: markspass
+      DB_NAME: marksdb
+    ports:
+      - "5001:5001"  # 将容器的 5001 端口映射到主机的 5001 端口
+    depends_on:
+      - db
+    command: gunicorn --bind 0.0.0.0:5001 app:app  # 启动后端服务
 
   frontend:
-    # TODO: you will need to add to this
-
-  automark:
-    build: ./automark
+    build: ./frontend  # 前端代码路径
+    ports:
+      - "8080:8080"  # 前端运行在 8080 端口
     depends_on:
-      - backend
+      - backend  # 确保后端服务先启动
+  automark:  # 添加 automark 服务
+    image: liosu/automark
+    container_name: automark
+    ports:
+      - "9900:9900"
+    depends_on:
       - db
-    profiles:
-      - debug
+    # 更多配置项
+
+
+volumes:
+  db-data:
