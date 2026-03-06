@@ -2,14 +2,14 @@ version: "3.8"
 
 services:
   db:
-    image: postgres:15  # 你可以选择使用 postgres:15 或 postgres:latest
+    image: postgres:15
     environment:
       POSTGRES_USER: marksuser
       POSTGRES_PASSWORD: markspass
       POSTGRES_DB: marksdb
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - db-data:/var/lib/postgresql  # 挂载到 /var/lib/postgresql 而不是 /data
+      - db-data:/var/lib/postgresql
     ports:
       - "5432:5432"
     healthcheck:
@@ -18,6 +18,8 @@ services:
       retries: 5
       start_period: 10s
       timeout: 10s
+    networks:
+      - app-network  # 确保 db 连接到 app-network
 
   backend:
     build: ./backend
@@ -27,25 +29,37 @@ services:
       DB_PASSWORD: markspass
       DB_NAME: marksdb
     ports:
-      - "5001:5001"  # 后端端口
+      - "5001:5001"
     depends_on:
       - db
-    command: gunicorn --bind 0.0.0.0:5001 app:app  # 启动后端服务
+    command: gunicorn --bind 0.0.0.0:5001 app:app
+    networks:
+      - app-network  # 确保 backend 连接到 app-network
 
   frontend:
     build: ./frontend
     ports:
-      - "8080:8080"  # 前端端口
+      - "8080:8080"
     depends_on:
-      - backend  # 确保后端服务先启动
+      - backend
+    networks:
+      - app-network  # 确保 frontend 连接到 app-network
 
-  automark:  # automark 服务
+  automark:
     build: ./automark
     depends_on:
       - backend
       - db
     profiles:
       - debug
+    environment:
+      - VITE_API_URL=http://backend:5001  # 确保使用5001端口
+    networks:
+      - app-network
 
 volumes:
   db-data:
+
+networks:
+  app-network:
+    driver: bridge  # 使用桥接网络
